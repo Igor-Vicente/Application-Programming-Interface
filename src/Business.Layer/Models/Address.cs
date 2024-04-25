@@ -1,6 +1,6 @@
 ﻿namespace Business.Layer.Models
 {
-    public class Address
+    public class Address : Entity
     {
         public string? Street { get; set; }
         public string? StreetNumber { get; set; }
