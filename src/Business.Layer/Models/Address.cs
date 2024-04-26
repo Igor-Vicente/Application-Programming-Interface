@@ -9,5 +9,10 @@
         public string? Neighborhood { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
+        public Guid SupplierId { get; set; }
+
+
+        /***************** Only to Support the Relation *******************/
+        public Supplier Supplier { get; set; }
     }
 }
