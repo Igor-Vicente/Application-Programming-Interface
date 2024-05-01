@@ -8,8 +8,9 @@ namespace Business.Layer.Interfaces
     */
     public interface ISupplierService : IDisposable
     {
-        Task AddAsync(Supplier supplier);
+        Task<bool> AddAsync(Supplier supplier);
         Task UpdateAsync(Supplier supplier);
         Task RemoveAsync(Guid id);
+        Task UpdateSupplierAddress(Address address);
     }
 }

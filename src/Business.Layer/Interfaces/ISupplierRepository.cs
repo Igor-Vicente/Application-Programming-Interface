@@ -13,6 +13,8 @@ namespace Business.Layer.Interfaces
          * (Assim, um único Repository se faz necessário para lidar com Supplier e o seu agregado Address.)
         */
         Task<Address> GetAddressOfTheSupplierAsync(Guid supplierId);
+        Task<Address> GetAddressByIdAsync(Guid addressId);
+        Task UpdateAddressOfTheSupplier(Address address);
         Task RemoveAddressOfTheSupplierAsync(Address address);
     }
 }

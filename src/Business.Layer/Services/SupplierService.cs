@@ -14,18 +14,19 @@ namespace Business.Layer.Services
             _supplierRepository = supplierRepository;
         }
 
-        public async Task AddAsync(Supplier supplier)
+        public async Task<bool> AddAsync(Supplier supplier)
         {
             /*************** validade entity *************************/
-            if (!ExecuteValidation(new SupplierValidation(), supplier) || !ExecuteValidation(new AddressValidation(), supplier.Address)) return;
+            if (!ExecuteValidation(new SupplierValidation(), supplier) || !ExecuteValidation(new AddressValidation(), supplier.Address)) return false;
             /*************** validade duplicity **********************/
             if (_supplierRepository.SearchAsync(s => s.Document == supplier.Document).Result.Any())
             {
                 Notifier("The informed document is already being used.");
-                return;
+                return false;
             }
 
             await _supplierRepository.AddAsync(supplier);
+            return true;
         }
 
         public async Task UpdateAsync(Supplier supplier)
@@ -54,6 +55,7 @@ namespace Business.Layer.Services
                 Notifier("The supplier has registered products.");
                 return;
             }
+            /*************** todo: verificar necessidade de fazer essa consulta, visto que var supplier obtém endereco *******************/
             var address = await _supplierRepository.GetAddressOfTheSupplierAsync(supplier.Id);
             if (address != null)
             {
@@ -62,6 +64,13 @@ namespace Business.Layer.Services
 
             await _supplierRepository.RemoveAsync(id);
         }
+        public async Task UpdateSupplierAddress(Address address)
+        {
+            if (!ExecuteValidation(new AddressValidation(), address)) return;
+
+            await _supplierRepository.UpdateAddressOfTheSupplier(address);
+        }
+
         /*
          * The Dispose method signals that the instance (object) can be removed from memory, 
          * so when the Garbage Collector cleans it, this instance will be removed.

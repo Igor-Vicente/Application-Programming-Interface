@@ -57,6 +57,7 @@ namespace Data.Layer.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "varchar(200)", nullable: false),
                     Description = table.Column<string>(type: "varchar(2000)", nullable: false),
+                    Image = table.Column<string>(type: "varchar(200)", nullable: false),
                     Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),

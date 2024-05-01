@@ -79,6 +79,10 @@ namespace Data.Layer.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(2000)");
 
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(200)");

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Layer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240426173910_Initial")]
+    [Migration("20240430130151_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -81,6 +81,10 @@ namespace Data.Layer.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Name")
                         .IsRequired()

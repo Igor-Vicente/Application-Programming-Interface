@@ -11,6 +11,7 @@ namespace Data.Layer.Mappings
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Name).IsRequired().HasColumnType("varchar(200)");
             builder.Property(p => p.Description).IsRequired().HasColumnType("varchar(2000)");
+            builder.Property(p => p.Image).IsRequired().HasColumnType("varchar(200)");
             builder.ToTable("Products");
         }
     }

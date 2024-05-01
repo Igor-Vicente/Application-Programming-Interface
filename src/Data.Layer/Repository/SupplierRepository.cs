@@ -19,6 +19,14 @@ namespace Data.Layer.Repository
         public async Task<Address> GetAddressOfTheSupplierAsync(Guid supplierId) =>
             await Db.Adresses.AsNoTracking().FirstOrDefaultAsync(a => a.SupplierId == supplierId);
 
+        public async Task<Address> GetAddressByIdAsync(Guid addressId) =>
+            await Db.Adresses.AsNoTracking().FirstOrDefaultAsync(a => a.Id == addressId);
+
+        public async Task UpdateAddressOfTheSupplier(Address address)
+        {
+            Db.Adresses.Update(address);
+            await SaveChangesAsync();
+        }
 
         public async Task RemoveAddressOfTheSupplierAsync(Address address)
         {
