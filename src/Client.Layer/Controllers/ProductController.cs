@@ -3,10 +3,12 @@ using Business.Layer.Interfaces;
 using Business.Layer.Models;
 using Client.Layer.Dtos.Incoming;
 using Client.Layer.Dtos.Outgoing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Layer.Controllers
 {
+    [Authorize]
     [Route("api/products")]
     public class ProductController : MainController
     {
@@ -16,7 +18,7 @@ namespace Client.Layer.Controllers
         public ProductController(INotificator notificator,
                                 IProductService productService,
                                 IProductRepository productRepository,
-                                IMapper mapper) : base(notificator)
+                                IMapper mapper, IUser user) : base(notificator, user)
         {
             _productService = productService;
             _productRepository = productRepository;
@@ -40,13 +42,23 @@ namespace Client.Layer.Controllers
             var outProductWithSupplierDto = _mapper.Map<OutProductWithSupplierDto>(product);
             return outProductWithSupplierDto;
         }
+        [RequestSizeLimit(1 * 1024 * 1024)]
+        [HttpPost("form-data")]
+        public async Task<ActionResult> AddImage(IFormFile file)
+        {
+            return Ok(file);
+        }
 
+        [RequestSizeLimit(1 * 1024 * 1024)]
         [HttpPost]
         public async Task<ActionResult<OutProductDto>> AddAsync(InProductWithSupplierDto inProductWithSupplierDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
-            var product = _mapper.Map<Product>(inProductWithSupplierDto);
+            var fileName = $"{Guid.NewGuid()}_{inProductWithSupplierDto.ImagemUpload.FileName}";
+            if (!await UploadFileIFormFile(inProductWithSupplierDto.ImagemUpload, fileName)) return CustomResponse(ModelState);
 
+            var product = _mapper.Map<Product>(inProductWithSupplierDto);
+            product.Image = fileName;
             await _productService.AddAsync(product);
 
             var outProductDto = _mapper.Map<OutProductDto>(product);
@@ -63,6 +75,52 @@ namespace Client.Layer.Controllers
 
             var outProductDto = _mapper.Map<OutProductDto>(product);
             return CustomResponse(outProductDto);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateAsync(Guid id, UpdateProductWithSupplierDto UpdateProductWithSupplierDto)
+        {
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            var product = await _productRepository.GetByIdAsync(id);
+
+            if (UpdateProductWithSupplierDto.ImagemUpload != null)
+            {
+                var fileName = $"{Guid.NewGuid()}_{UpdateProductWithSupplierDto.ImagemUpload.FileName}";
+                if (!await UploadFileIFormFile(UpdateProductWithSupplierDto.ImagemUpload, fileName)) return CustomResponse(ModelState);
+                product.Image = fileName;
+            }
+
+            product.Name = UpdateProductWithSupplierDto.Name;
+            product.Description = UpdateProductWithSupplierDto.Description;
+            product.Value = UpdateProductWithSupplierDto.Value;
+            product.Active = UpdateProductWithSupplierDto.Active;
+
+            await _productService.UpdateAsync(product);
+            var outProductDto = _mapper.Map<OutProductDto>(product);
+            return CustomResponse(outProductDto);
+        }
+
+
+        private async Task<bool> UploadFileIFormFile(IFormFile file, string fileName)
+        {
+            if (file == null || file.Length == 0)
+            {
+                NotifierError("Forneça uma imagem para este produto!");
+                return false;
+            }
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", fileName);
+
+            if (System.IO.File.Exists(path))
+            {
+                NotifierError("Já existe arquivo com mesmo nome!");
+                return false;
+            }
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return true;
         }
 
 

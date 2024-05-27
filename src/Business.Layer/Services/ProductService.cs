@@ -6,12 +6,16 @@ namespace Business.Layer.Services
 {
     public class ProductService : BaseService, IProductService
     {
-        public readonly IProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
+        /*With the dependency injection is possible take user data from the authenticated user making the request*/
+        private readonly IUser _user;
 
-        public ProductService(IProductRepository productRepository, INotificator notifier)
+        public ProductService(IProductRepository productRepository, INotificator notifier, IUser user)
             : base(notifier)
         {
             _productRepository = productRepository;
+            /*this is not being used, but if you need the user data for some reason it is accessible here (since the user is authenticated)*/
+            _user = user;
         }
 
         public async Task AddAsync(Product product)

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.Layer", "src\Data.Laye
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business.Layer", "src\Business.Layer\Business.Layer.csproj", "{C2835B98-4783-455F-B046-852273434E26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Layer", "src\Client.Layer\Client.Layer.csproj", "{1CC34A3D-B406-46AA-9230-B500D3194654}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Layer", "src\Client.Layer\Client.Layer.csproj", "{1CC34A3D-B406-46AA-9230-B500D3194654}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,9 +5,17 @@ using Client.Layer.Dtos.Outgoing;
 
 namespace Client.Layer.Configuration
 {
-    public class AutoMapperConfig : Profile
+    public static class AutoMapperConfig
     {
-        public AutoMapperConfig()
+        public static IServiceCollection ConfigureAutoMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            return services;
+        }
+    }
+    public class AutoMapperProfile : Profile
+    {
+        public AutoMapperProfile()
         {
             CreateMap<InSupplierDto, Supplier>();
             CreateMap<InProductDto, Product>();
@@ -18,6 +26,7 @@ namespace Client.Layer.Configuration
 
             CreateMap<Product, OutProductWithSupplierDto>().ReverseMap();
             CreateMap<InProductWithSupplierDto, Product>();
+            CreateMap<UpdateProductWithSupplierDto, Product>();
         }
     }
 }

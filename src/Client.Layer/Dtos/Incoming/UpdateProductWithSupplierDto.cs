@@ -2,7 +2,7 @@
 
 namespace Client.Layer.Dtos.Incoming
 {
-    public class InProductWithSupplierDto
+    public class UpdateProductWithSupplierDto
     {
 
         [Required(ErrorMessage = "The {0} field must be provided. (Obrigatório!)")]
@@ -12,7 +12,7 @@ namespace Client.Layer.Dtos.Incoming
         [Required(ErrorMessage = "The {0} field must be provided. (Obrigatório!)")]
         [StringLength(1000, ErrorMessage = "The {0} field must be between {2} and {1} characters. (Inválido!)", MinimumLength = 2)]
         public string? Description { get; set; }
-        public IFormFile ImagemUpload { get; set; }
+        public IFormFile? ImagemUpload { get; set; }
         //public string? Image { get; set; }
 
         [Required(ErrorMessage = "The {0} field must be provided. (Obrigatório!)")]

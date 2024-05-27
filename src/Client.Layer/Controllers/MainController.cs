@@ -8,9 +8,19 @@ namespace Client.Layer.Controllers
     public abstract class MainController : ControllerBase
     {
         private readonly INotificator _notificator;
-        protected MainController(INotificator notificator)
+        private readonly IUser _user;
+
+        protected Guid UsuarioId { get; set; }
+        protected bool UsuarioAutenticado { get; set; }
+
+        protected MainController(INotificator notificator, IUser user)
         {
             _notificator = notificator;
+            if (user.IsAuthenticated())
+            {
+                UsuarioId = user.GetUserId();
+                UsuarioAutenticado = true;
+            }
         }
 
         protected ActionResult CustomResponse(object result = null)
