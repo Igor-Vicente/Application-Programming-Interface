@@ -1,15 +1,18 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Business.Layer.Interfaces;
 using Business.Layer.Models;
+using Client.Layer.Controllers;
 using Client.Layer.Dtos.Incoming;
 using Client.Layer.Dtos.Outgoing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Client.Layer.Controllers
+namespace Client.Layer.V1.Controllers
 {
     [Authorize]
-    [Route("api/products")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/products")]
     public class ProductController : MainController
     {
         private readonly IProductService _productService;
@@ -49,13 +52,13 @@ namespace Client.Layer.Controllers
             return Ok(file);
         }
 
-        [RequestSizeLimit(1 * 1024 * 1024)]
+        [RequestSizeLimit(10 * 1024 * 1024)]
         [HttpPost]
         public async Task<ActionResult<OutProductDto>> AddAsync(InProductWithSupplierDto inProductWithSupplierDto)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
-            var fileName = $"{Guid.NewGuid()}_{inProductWithSupplierDto.ImagemUpload.FileName}";
-            if (!await UploadFileIFormFile(inProductWithSupplierDto.ImagemUpload, fileName)) return CustomResponse(ModelState);
+            var fileName = $"{Guid.NewGuid()}_{inProductWithSupplierDto.ImageUpload.FileName}";
+            if (!await UploadFileIFormFile(inProductWithSupplierDto.ImageUpload, fileName)) return CustomResponse(ModelState);
 
             var product = _mapper.Map<Product>(inProductWithSupplierDto);
             product.Image = fileName;

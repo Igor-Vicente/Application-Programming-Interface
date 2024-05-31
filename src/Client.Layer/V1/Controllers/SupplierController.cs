@@ -1,16 +1,19 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Business.Layer.Interfaces;
 using Business.Layer.Models;
+using Client.Layer.Controllers;
 using Client.Layer.Dtos.Incoming;
 using Client.Layer.Dtos.Outgoing;
 using Client.Layer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Client.Layer.Controllers
+namespace Client.Layer.V1.Controllers
 {
     [Authorize]
-    [Route("api/suppliers")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/suppliers")]
     public class SupplierController : MainController
     {
         private readonly ISupplierRepository _supplierRepository;

@@ -4,6 +4,8 @@ using Business.Layer.Services;
 using Client.Layer.Extensions;
 using Data.Layer.Context;
 using Data.Layer.Repository;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Client.Layer.Configuration
 {
@@ -20,6 +22,9 @@ namespace Client.Layer.Configuration
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, AspNetUser>();
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
             return services;
         }
     }

@@ -1,4 +1,6 @@
-﻿using Business.Layer.Interfaces;
+﻿using Asp.Versioning;
+using Business.Layer.Interfaces;
+using Client.Layer.Controllers;
 using Client.Layer.Dtos.Incoming;
 using Client.Layer.Dtos.Outgoing;
 using Client.Layer.Extensions;
@@ -10,9 +12,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Client.Layer.Controllers
+namespace Client.Layer.V2.Controllers
 {
-    [Route("api/auth")]
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/auth")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -41,7 +44,7 @@ namespace Client.Layer.Controllers
             var result = await _userManager.CreateAsync(user, createUserDto.Password);
             if (result.Succeeded)
             {
-                //await _userManager.AddClaimAsync(user, new Claim("Supplier", "Read"));
+                await _userManager.AddClaimAsync(user, new Claim("Supplier", "Read"));
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return CustomResponse(await GenerateToken(createUserDto.Email));
             }
